@@ -46,6 +46,7 @@ function App() {
   ]);
   const [selectedVeggies, setSelectedVeggies] = useState([]);
   const [selectedVegCost, setSelectedVegCost] = useState(0);
+  const [vegStr, setVegStr] = useState("");
 
   // Order total
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -90,6 +91,8 @@ function App() {
         setSelectedVegCost={setSelectedVegCost}
         selectedVeggies={selectedVeggies}
         setSelectedVeggies={setSelectedVeggies}
+        vegStr={vegStr}
+        setVegStr={setVegStr}
 
         orderPlaced={orderPlaced}
         setOrderPlaced={setOrderPlaced}

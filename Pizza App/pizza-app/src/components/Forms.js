@@ -24,6 +24,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     allVeggies, setAllVeggies,
                     selectedVeggies, setSelectedVeggies,
                     selectedVegCost, setSelectedVegCost,
+                    vegStr, setVegStr,
 
                     orderPlaced, setOrderPlaced,
                     orderTotal, setOrderTotal }) => {
@@ -78,7 +79,6 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
 
     // Meat
     const selectedMeatHandler = (e) => {
-        meatReceipt();
         setAllMeat(allMeat.map((item) => {
             if (item.meatName === e.target.value){
                 return {
@@ -88,10 +88,6 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
             return item;
         }));
     }
-
-    // useEffect(() => {
-    //     meatReceipt();
-    // }, [allMeat]);
 
     // Add to or remove meat from list.
     const createCheckedMeatList = () => {
@@ -151,33 +147,10 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         setOrderTotal(total);
     }
 
- 
-
-    // set costs of each selected item 
-    // const getCosts = (e) => {
-    //     const sizeCosts = {
-    //         "Personal": 6, 
-    //         "Medium": 10,
-    //         "Large": 14,
-    //         "Extra Large": 16,
-    //     };
-    //       const crustCosts = {
-    //         "Plain Crust": 0,
-    //         "Garlic Butter Crust": 2,
-    //         "Cheese Stuffed Crust": 3,
-    //         "Spicy Crust": 1,
-    //         "House Special Crust": 0,
-    //     };
-    //     e.preventDefault();
-    //     setSelectedSizeCost(sizeCosts[selectedSize])
-    //     setSelectedCrustCost(crustCosts[selectedCrust])
-    //     setOrderPlaced(true);
-    // };
-
-    // Set costs of each selected item 
     const getCosts = (e) => {
-        //e.preventDefault();
         setOrderPlaced(true);
+        meatReceipt();
+        vegReceipt();
     };
 
     const meatReceipt = () => {
@@ -196,6 +169,22 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         setMeatStr(meatConcat);
     };
 
+    const vegReceipt = () => {
+        let vegConcat = "";
+        for (let i = 0; i < selectedVeggies.length; i++){
+            if (i === 0) {
+                vegConcat = vegConcat + selectedVeggies[i].vegName + " (no additional cost), ";
+            }
+            else if (i >= 1 && i < selectedVeggies.length - 1) {
+                vegConcat = vegConcat + selectedVeggies[i].vegName + " (+$1), ";
+            }
+            else if (i === selectedVeggies.length - 1){
+                vegConcat = vegConcat + selectedVeggies[i].vegName + " (+$1)";
+            }
+        }
+        setVegStr(vegConcat);
+    };
+
     const receipt = () => {
         if (orderPlaced) {
             render (
@@ -206,8 +195,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                         <p>Crust: {selectedCrust}</p>
                         <p>Sauce: {selectedSauce}</p>
                         <p>Cheese: {selectedCheese}</p>
-                        <p>Meat: {meatStr}</p>
-                        <p>Veggies: </p>
+                        {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
+                        {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
                         <p>-----------------------------------------------</p>
                     </div>
                     <div className="total-price">
