@@ -1,17 +1,30 @@
+import { render } from "@testing-library/react";
 import React, {useEffect} from "react";
-import { Form } from 'react-bootstrap';
+import { Col, Form, Row, Container } from 'react-bootstrap';
 import { CardGroup } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import Receipt from "./Receipt";
 
 const PizzaForm = ({ selectedSize, setSelectedSize, 
                     selectedSizeCost, setSelectedSizeCost, 
+
                     selectedCrust, setSelectedCrust,
                     selectedCrustCost, setSelectedCrustCost, 
+
+                    selectedSauce, setSelectedSauce,
+
+                    selectedCheese, setSelectedCheese,
+                    selectedCheeseCost, setSelectedCheeseCost,
+
+                    allMeat, setAllMeat,
+                    selectedMeat, setSelectedMeat,
+                    selectedMeatCost, setSelectedMeatCost,
+                    meatStr, setMeatStr,
+
                     allVeggies, setAllVeggies,
                     selectedVeggies, setSelectedVeggies,
                     selectedVegCost, setSelectedVegCost,
+
                     orderPlaced, setOrderPlaced,
                     orderTotal, setOrderTotal }) => {
 
@@ -40,7 +53,59 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         setSelectedCrustCost(crustCosts[e.target.value]);
     }
 
-    // veggies
+    // Sets selected sauce state.
+    const selectedSauceHandler = (e) => {
+        const sauceCosts = {
+            "Marinara Sauce": 0,
+            "White Sauce": 0,
+            "Barbeque Sauce": 0,
+            "No Sauce": 0,
+        };
+        setSelectedSauce(e.target.value);
+    }
+
+    // Sets selected cheese state.
+    const selectedCheeseHandler = (e) => {
+        const cheeseCosts = {
+            "Regular": 0,
+            "No Cheese": 0,
+            "Extra Cheese": 3,
+            "Vegan Cheeze": 2,
+        };
+        setSelectedCheese(e.target.value);
+        setSelectedCheeseCost(cheeseCosts[e.target.value]);
+    }
+
+    // Meat
+    const selectedMeatHandler = (e) => {
+        meatReceipt();
+        setAllMeat(allMeat.map((item) => {
+            if (item.meatName === e.target.value){
+                return {
+                    ...item, isChecked: !item.isChecked
+                }
+            }
+            return item;
+        }));
+    }
+
+    // useEffect(() => {
+    //     meatReceipt();
+    // }, [allMeat]);
+
+    // Add to or remove meat from list.
+    const createCheckedMeatList = () => {
+        setSelectedMeat(allMeat.filter((el) => el.isChecked === true));
+    }
+
+    const addUpMeatCost = () => {
+        if (selectedMeat.length !== 0) {
+            setSelectedMeatCost(selectedMeat.length - 1);
+        }
+    }
+
+
+    // Veggies
     const selectedVeggiesHandler = (e) => {
         setAllVeggies(allVeggies.map((item) => {
             if (item.vegName === e.target.value) {
@@ -56,13 +121,15 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
 
     useEffect(() => {
         createCheckedVegList();
-    }, [allVeggies]);
+        createCheckedMeatList();
+    }, [allVeggies, allMeat]);
 
     useEffect(() => {
         addUpVegCost();
-    }, [selectedVeggies]);
+        addUpMeatCost();
+    }, [selectedVeggies, selectedMeat]);
 
-    // add or remove veggies to list
+    // Add to or remove veggies from list.
     const createCheckedVegList = () => {
         setSelectedVeggies(allVeggies.filter((el) => el.isChecked === true));
     }
@@ -73,20 +140,14 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         }
     }
 
-    // Sets selected veggies state.
-    // const selectedVeggiesHandler = (e) => {
-    //     !selectedVeggies
-    //     setSelectedVeggies()
-    //     let count = 0;
-    // }
-    
     //  useEffect is constantly listening for state changes, and it runs whenever it does change.
     useEffect(() => {
         orderTotalHandler();
-    }, [selectedSizeCost, selectedCrustCost, selectedVegCost]);
+    }, [selectedSizeCost, selectedCrustCost, selectedCheeseCost, selectedMeatCost, selectedVegCost]);
 
     const orderTotalHandler = () => {
-        let total = selectedSizeCost + selectedCrustCost + selectedVegCost;
+        let total = selectedSizeCost + selectedCrustCost + 
+        selectedCheeseCost + selectedMeatCost + selectedVegCost;
         setOrderTotal(total);
     }
 
@@ -113,19 +174,59 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
     //     setOrderPlaced(true);
     // };
 
-    // let receipt;
-    // if (orderPlaced) {
-    //     receipt = <Receipt 
-    //     selectedSize={selectedSize}
-    //     selectedSizeCost={selectedSizeCost}
-    //     selectedCrust={selectedCrust}
-    //     selectedCrustCost={selectedCrustCost}
-    //     />
-    // }
+    // Set costs of each selected item 
+    const getCosts = (e) => {
+        //e.preventDefault();
+        setOrderPlaced(true);
+    };
+
+    const meatReceipt = () => {
+        let meatConcat = "";
+        for (let i = 0; i < selectedMeat.length; i++){
+            if (i === 0){
+                meatConcat = meatConcat + selectedMeat[i].meatName + " (no additional cost), ";
+            }
+            else if (i >= 1 && i < selectedMeat.length - 1) {
+                meatConcat = meatConcat + selectedMeat[i].meatName + " (+$1), ";
+            }
+            else if (i === selectedMeat.length - 1){
+                meatConcat = meatConcat + selectedMeat[i].meatName + " (+$1)";
+            }
+        }
+        setMeatStr(meatConcat);
+    };
+
+    const receipt = () => {
+        if (orderPlaced) {
+            render (
+                <Container>
+                    <div className="show-order">
+                        <h3>You Ordered:</h3>
+                        <p>Size: {selectedSize}</p>
+                        <p>Crust: {selectedCrust}</p>
+                        <p>Sauce: {selectedSauce}</p>
+                        <p>Cheese: {selectedCheese}</p>
+                        <p>Meat: {meatStr}</p>
+                        <p>Veggies: </p>
+                        <p>-----------------------------------------------</p>
+                    </div>
+                    <div className="total-price">
+                        <h3>Total: $ -.00</h3>
+                        <p></p>
+                    </div>
+                </Container>
+            )
+        }
+    };
+    useEffect(() => {
+        receipt();
+    }, [orderPlaced]);
+        
+
 
     return (
-        
-             <Form>
+        <div>
+            <Form>
             <CardGroup>
                 {/* Size Options */}
                 <Card
@@ -181,7 +282,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     <Card.Body>
                         <Card.Title>Select a crust:</Card.Title>
                         <Card.Text>- Choose one</Card.Text>
-                        {/* Size options radio */}
+                        {/* Crust options radio */}
                         <Form.Check
                             type="radio"
                             label="Plain Crust"
@@ -225,6 +326,165 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     </Card.Body>
                     <Card.Footer className="text-danger"><h4>${selectedCrustCost}.00</h4></Card.Footer>
                 </Card>
+                {/* Sauce Options */}
+                <Card
+                    bg='warning'
+                    text='danger'
+                >
+                <Card.Header>SAUCE</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Select a sauce:</Card.Title>
+                        <Card.Text>- Choose one</Card.Text>
+                        {/* Sauce options radio */}
+                        <Form.Check
+                            type="radio"
+                            label="Marinara Sauce"
+                            name="sauce"
+                            value="Marinara Sauce"
+                            checked={selectedSauce === "Marinara Sauce"}
+                            onChange={selectedSauceHandler} 
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="White Sauce"
+                            name="sauce"
+                            value="White Sauce"
+                            checked={selectedSauce === "White Sauce"}
+                            onChange={selectedSauceHandler}
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="Barbeque Sauce"
+                            name="sauce"
+                            value="Barbeque Sauce"
+                            checked={selectedSauce === "Barbeque Sauce"}
+                            onChange={selectedSauceHandler}
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="No Sauce"
+                            name="sauce"
+                            value="No Sauce"
+                            checked={selectedSauce === "No Sauce"}
+                            onChange={selectedSauceHandler}
+                        />
+                    </Card.Body>
+                    <Card.Footer className="text-danger"><h4>*No additional cost</h4></Card.Footer>
+                </Card>
+                {/* Cheese Options */}
+                <Card
+                    bg='warning'
+                    text='danger'
+                >
+                <Card.Header>CHEESE</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Select a cheese:</Card.Title>
+                        <Card.Text>- Choose one</Card.Text>
+                        {/* Sauce options radio */}
+                        <Form.Check
+                            type="radio"
+                            label="Regular"
+                            name="cheese"
+                            value="Regular"
+                            checked={selectedCheese === "Regular"}
+                            onChange={selectedCheeseHandler} 
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="No Cheese"
+                            name="cheese"
+                            value="No Cheese"
+                            checked={selectedCheese === "No Cheese"}
+                            onChange={selectedCheeseHandler}
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="Extra Cheese"
+                            name="cheese"
+                            value="Extra Cheese"
+                            checked={selectedCheese === "Extra Cheese"}
+                            onChange={selectedCheeseHandler}
+                        />
+                        <Form.Check
+                            type="radio"
+                            label="Vegan Cheeze"
+                            name="cheese"
+                            value="Vegan Cheeze"
+                            checked={selectedCheese === "Vegan Cheeze"}
+                            onChange={selectedCheeseHandler}
+                        />
+                    </Card.Body>
+                    <Card.Footer className="text-danger"><h4>${selectedCheeseCost}.00</h4></Card.Footer>
+                </Card>
+                {/* Meat Options */}
+                <Card
+                    bg='warning'
+                    text='danger'
+                >
+                    <Card.Header>MEAT</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Select meat:</Card.Title>
+                        <Card.Text>- You can choose more than one</Card.Text>
+                        {/* Veg options checkbox */}
+                        <Form.Check
+                            type="checkbox"
+                            label="Pepperoni"
+                            name="meat"
+                            value="Pepperoni"
+                            checked={allMeat[0].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                        <Form.Check
+                            type="checkbox"
+                            label="Sausage"
+                            name="meat"
+                            value="Sausage"
+                            checked={allMeat[1].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                        <Form.Check
+                            type="checkbox"
+                            label="Canadian Bacon"
+                            name="meat"
+                            value="Canadian Bacon"
+                            checked={allMeat[2].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                        <Form.Check
+                            type="checkbox"
+                            label="Chicken"
+                            name="meat"
+                            value="Chicken"
+                            checked={allMeat[3].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                         <Form.Check
+                            type="checkbox"
+                            label="Buffalo Chicken"
+                            name="meat"
+                            value="Buffalo Chicken"
+                            checked={allMeat[4].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                        <Form.Check
+                            type="checkbox"
+                            label="Vegan Chick'n"
+                            name="meat"
+                            value="Vegan Chick'n"
+                            checked={allMeat[5].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                        <Form.Check
+                            type="checkbox"
+                            label="Vegan Sausage"
+                            name="meat"
+                            value="Vegan Sausage"
+                            checked={allMeat[6].isChecked}
+                            onClick={selectedMeatHandler}
+                        />
+                    </Card.Body>
+                    <Card.Footer className="text-danger"><h4>${selectedMeatCost}.00</h4></Card.Footer>
+                </Card>
                 {/* Veggie Options */}
                 <Card
                     bg='warning'
@@ -234,7 +494,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     <Card.Body>
                         <Card.Title>Select veggies:</Card.Title>
                         <Card.Text>- You can choose more than one</Card.Text>
-                        {/* Size options radio */}
+                        {/* Veg options checkbox */}
                         <Form.Check
                             type="checkbox"
                             label="Tomatoes"
@@ -304,9 +564,30 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
             </CardGroup>
             <Card.Footer className="text-danger"><h4>Total: ${orderTotal}.00</h4></Card.Footer>
-        </Form>
-       
+            <Row>
+                <Col>
+                    <Button
+                        variant="warning"
+                        size="lg"
+                        block
+                        onClick={getCosts}
+                    >Place Order!</Button>
+                </Col>
+                <Col>
+                    <Button
+                        variant="danger"
+                        size="lg"
+                        block
+                    >Cancel</Button>
+                </Col>
+            </Row>
+            </Form>
+            {receipt}
+        </div>
+        
     );
 };
+
+
 
 export default PizzaForm;
