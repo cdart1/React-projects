@@ -27,7 +27,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     vegStr, setVegStr,
 
                     orderPlaced, setOrderPlaced,
-                    orderTotal, setOrderTotal }) => {
+                    orderTotal, setOrderTotal}) => {
 
     // Sets selected size state.
     const selectedSizeHandler = (e) => {
@@ -156,8 +156,11 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
     const meatReceipt = () => {
         let meatConcat = "";
         for (let i = 0; i < selectedMeat.length; i++){
-            if (i === 0){
+            if (i === 0 && selectedMeat.length !== 1){
                 meatConcat = meatConcat + selectedMeat[i].meatName + " (no additional cost), ";
+            }
+            else if (i === 0 && selectedMeat.length === 1) {
+                meatConcat = meatConcat + selectedMeat[i].meatName + " (no additional cost)";
             }
             else if (i >= 1 && i < selectedMeat.length - 1) {
                 meatConcat = meatConcat + selectedMeat[i].meatName + " (+$1), ";
@@ -172,8 +175,11 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
     const vegReceipt = () => {
         let vegConcat = "";
         for (let i = 0; i < selectedVeggies.length; i++){
-            if (i === 0) {
+            if (i === 0 && selectedVeggies.length !== 1) {
                 vegConcat = vegConcat + selectedVeggies[i].vegName + " (no additional cost), ";
+            }
+            else if (i === 0 && selectedVeggies.length === 1) {
+                vegConcat = vegConcat + selectedVeggies[i].vegName + " (no additional cost)";
             }
             else if (i >= 1 && i < selectedVeggies.length - 1) {
                 vegConcat = vegConcat + selectedVeggies[i].vegName + " (+$1), ";
@@ -191,16 +197,20 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 <Container>
                     <div className="show-order">
                         <h3>You Ordered:</h3>
-                        <p>Size: {selectedSize}</p>
-                        <p>Crust: {selectedCrust}</p>
-                        <p>Sauce: {selectedSauce}</p>
-                        <p>Cheese: {selectedCheese}</p>
+                        <p>Size: {selectedSize} (${selectedSizeCost})</p>
+                        <p>Crust: {selectedCrust} 
+                            {selectedCrustCost !== 0 ? " (+$" + selectedCrustCost + ")": " (no additional cost)"}
+                        </p>
+                        <p>Sauce: {selectedSauce} (no additional cost)</p>
+                        <p>Cheese: {selectedCheese}
+                            {selectedCheeseCost !== 0 ? " (+$" + selectedCheeseCost + ")": " (no additional cost)"}
+                        </p>
                         {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
                         {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
                         <p>-----------------------------------------------</p>
                     </div>
                     <div className="total-price">
-                        <h3>Total: $ -.00</h3>
+                        <h3>Total: ${orderTotal}.00</h3>
                         <p></p>
                     </div>
                 </Container>
@@ -211,7 +221,9 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         receipt();
     }, [orderPlaced]);
         
-
+    const clearAll = () => {
+        window.location.reload(true);
+    }
 
     return (
         <div>
@@ -567,6 +579,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                         variant="danger"
                         size="lg"
                         block
+                        onClick={clearAll}
                     >Cancel</Button>
                 </Col>
             </Row>

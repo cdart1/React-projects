@@ -1,7 +1,9 @@
 import React, {useState} from "react";
+import { Container } from "react-bootstrap";
 import './App.css';
 import PizzaForm from "./components/Forms";
-import Receipt from "./components/Receipt";
+import PizzaVideo from "./components/video/pizza-video.mp4";
+import Nav from "./components/Nav";
 
 function App() {
   // Size
@@ -53,10 +55,26 @@ function App() {
   const [orderTotal, setOrderTotal] = useState();
 
   return (
-    <div className="App">
+    <Container 
+    style={{ marginTop: "30px", marginBottom: "30px" }}>
+      <Nav />
+      <video autoPlay loop muted
+      style={{
+        position: "absolute",
+        width: "100%",
+        left: "50%",
+        top: "50%",
+        height: "100%",
+        objectFit: "cover",
+        transform: "translate(-50%, -50%)",
+        zIndex: "-1"
+      }}>
+        <source src={PizzaVideo} type="video/mp4" />
+      </video>
       <header className="App-header">
         <h1>Welcome Pizza Lovers</h1>
       </header>
+      {/* Jumbotron here */}
       <PizzaForm 
         selectedSize={selectedSize}
         setSelectedSize={setSelectedSize}
@@ -99,7 +117,7 @@ function App() {
         orderTotal={orderTotal}
         setOrderTotal={setOrderTotal}
       />
-    </div>
+    </Container>
   );
 }
 
