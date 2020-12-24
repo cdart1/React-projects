@@ -1,9 +1,14 @@
-import React, {useState} from "react";
-import { Container } from "react-bootstrap";
+import React, {useState, useEffect} from "react";
+import { Container, Jumbotron } from "react-bootstrap";
 import './App.css';
 import PizzaForm from "./components/Forms";
 import PizzaVideo from "./components/video/pizza-video.mp4";
+import PizzaImg from "./components/img/pizza-img.jpg";
 import Nav from "./components/Nav";
+import Jumbo from "./components/Jumbotron";
+import Prices from "./components/Prices";
+import ThankYou from "./components/ThankYou";
+import { render } from "@testing-library/react";
 
 function App() {
   // Size
@@ -54,27 +59,57 @@ function App() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderTotal, setOrderTotal] = useState();
 
+  useEffect(() => {
+        receipt();
+    }, [orderPlaced]);
+
+const receipt = () => {
+  if (orderPlaced) {
+      render (
+      <Jumbotron>
+          <div className="show-order">
+              <h3>You Ordered:</h3>
+              <p>Size: {selectedSize} (${selectedSizeCost})</p>
+              <p>Crust: {selectedCrust} 
+                  {selectedCrustCost !== 0 ? " (+$" + selectedCrustCost + ")": " (no additional cost)"}
+              </p>
+              <p>Sauce: {selectedSauce} (no additional cost)</p>
+              <p>Cheese: {selectedCheese}
+                  {selectedCheeseCost !== 0 ? " (+$" + selectedCheeseCost + ")": " (no additional cost)"}
+              </p>
+              {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
+              {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
+              <p>-----------------------------------------------</p>
+          </div>
+          <div className="total-price">
+              <h3>Total: ${orderTotal}.00</h3>
+              <p></p>
+          </div>
+      </Jumbotron>
+        )
+    }
+};
+
   return (
     <Container 
     style={{ marginTop: "30px", marginBottom: "30px" }}>
       <Nav />
-      <video autoPlay loop muted
+      <img src={ PizzaImg } 
       style={{
-        position: "absolute",
-        width: "100%",
+        position: "fixed",
+        minWidth: "100%",
+        minHeight: "100%",
         left: "50%",
         top: "50%",
-        height: "100%",
-        objectFit: "cover",
+        // right: "20%",
+        // bottom: "20%",
+        // objectFit: "cover",
         transform: "translate(-50%, -50%)",
         zIndex: "-1"
-      }}>
-        <source src={PizzaVideo} type="video/mp4" />
-      </video>
-      <header className="App-header">
-        <h1>Welcome Pizza Lovers</h1>
-      </header>
+      }}/>
       {/* Jumbotron here */}
+      <Jumbo />
+      <Prices />
       <PizzaForm 
         selectedSize={selectedSize}
         setSelectedSize={setSelectedSize}
@@ -117,6 +152,8 @@ function App() {
         orderTotal={orderTotal}
         setOrderTotal={setOrderTotal}
       />
+      {receipt}
+      <ThankYou />
     </Container>
   );
 }

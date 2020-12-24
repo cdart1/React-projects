@@ -1,9 +1,6 @@
 import { render } from "@testing-library/react";
 import React, {useEffect} from "react";
-import { Col, Form, Row, Container } from 'react-bootstrap';
-import { CardGroup } from 'react-bootstrap';
-import { Card } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
+import { Col, Form, Row, Container, Jumbotron, Card, CardGroup, Button } from 'react-bootstrap';
 
 const PizzaForm = ({ selectedSize, setSelectedSize, 
                     selectedSizeCost, setSelectedSizeCost, 
@@ -191,48 +188,20 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
         setVegStr(vegConcat);
     };
 
-    const receipt = () => {
-        if (orderPlaced) {
-            render (
-                <Container>
-                    <div className="show-order">
-                        <h3>You Ordered:</h3>
-                        <p>Size: {selectedSize} (${selectedSizeCost})</p>
-                        <p>Crust: {selectedCrust} 
-                            {selectedCrustCost !== 0 ? " (+$" + selectedCrustCost + ")": " (no additional cost)"}
-                        </p>
-                        <p>Sauce: {selectedSauce} (no additional cost)</p>
-                        <p>Cheese: {selectedCheese}
-                            {selectedCheeseCost !== 0 ? " (+$" + selectedCheeseCost + ")": " (no additional cost)"}
-                        </p>
-                        {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
-                        {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
-                        <p>-----------------------------------------------</p>
-                    </div>
-                    <div className="total-price">
-                        <h3>Total: ${orderTotal}.00</h3>
-                        <p></p>
-                    </div>
-                </Container>
-            )
-        }
-    };
-    useEffect(() => {
-        receipt();
-    }, [orderPlaced]);
-        
     const clearAll = () => {
         window.location.reload(true);
     }
 
     return (
-        <div>
+        <Jumbotron
+            style={{ backgroundColor: "rgba(128, 53, 0, 0.781)", paddingTop: "10px", paddingBottom: "10px" }}>
+            <h2 className="text-center" style={{ color: "#FEEFB3", fontFamily: "monospace" }}>OR BUILD YOUR OWN PIZZA:</h2>
             <Form>
             <CardGroup>
                 {/* Size Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                     <Card.Header>SLICE</Card.Header>
                     <Card.Body>
@@ -276,8 +245,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
                 {/* Crust Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                     <Card.Header>CRUST</Card.Header>
                     <Card.Body>
@@ -329,8 +298,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
                 {/* Sauce Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                 <Card.Header>SAUCE</Card.Header>
                     <Card.Body>
@@ -374,8 +343,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
                 {/* Cheese Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                 <Card.Header>CHEESE</Card.Header>
                     <Card.Body>
@@ -419,8 +388,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
                 {/* Meat Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                     <Card.Header>MEAT</Card.Header>
                     <Card.Body>
@@ -488,8 +457,8 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Card>
                 {/* Veggie Options */}
                 <Card
-                    bg='warning'
                     text='danger'
+                    style={{ backgroundColor: "#FEEFB3"}}
                 >
                     <Card.Header>VEGGIES</Card.Header>
                     <Card.Body>
@@ -564,7 +533,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                     <Card.Footer className="text-danger"><h4>${selectedVegCost}.00</h4></Card.Footer>
                 </Card>
             </CardGroup>
-            <Card.Footer className="text-danger"><h4>Total: ${orderTotal}.00</h4></Card.Footer>
+            <Card.Footer style={{ color: "#FEEFB3"}}><h4>Total: ${orderTotal}.00</h4></Card.Footer>
             <Row>
                 <Col>
                     <Button
@@ -584,9 +553,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                 </Col>
             </Row>
             </Form>
-            {receipt}
-        </div>
-        
+        </Jumbotron>
     );
 };
 
