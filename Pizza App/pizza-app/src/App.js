@@ -60,9 +60,42 @@ function App() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderTotal, setOrderTotal] = useState();
 
+  // Button disabling
+  const [buttonState, setButtonState] = useState(false);
+
 //   useEffect(() => {
 //         receipt();
 //     }, [orderPlaced]);
+
+  const clearAll = () => {
+    setSelectedSize("Personal");
+    setSelectedSizeCost(6);
+    setSelectedCrust("Plain Crust");
+    setSelectedCrustCost(0);
+    setSelectedSauce("Marinara Sauce");
+    setSelectedCheese("Regular");
+    setSelectedCheeseCost(0);
+    setAllMeat(allMeat.map((item) => {
+        if (item.isChecked === true){
+            return {
+                ...item, isChecked: !item.isChecked
+            }
+        }
+        return item;
+    }));
+    setSelectedMeatCost(0);
+    setAllVeggies(allVeggies.map((item) => {
+        if (item.isChecked === true){
+            return {
+                ...item, isChecked: !item.isChecked
+            }
+        }
+        return item;
+    }));
+    setSelectedVegCost(0);
+    setButtonState(false);
+    setOrderPlaced(false);
+  };
 
   
     let util = null
@@ -112,17 +145,24 @@ function App() {
       <Prices 
         setSelectedSize={setSelectedSize}
         setSelectedSizeCost={setSelectedSizeCost}
+
         setSelectedCrust={setSelectedCrust}
         setSelectedCrustCost={setSelectedCrustCost}
+
         setSelectedSauce={setSelectedSauce}
+
         allMeat={allMeat}
         setAllMeat={setAllMeat}
         setSelectedMeat={setSelectedMeat}
         setSelectedMeatCost={setSelectedMeatCost}
+
         allVeggies={allVeggies}
         setAllVeggies={setAllVeggies}
         setSelectedVegCost={setSelectedVegCost}
 
+        clearAll={clearAll}
+        buttonState={buttonState}
+        setButtonState={setButtonState}
       />
       <PizzaForm 
         selectedSize={selectedSize}
@@ -165,6 +205,8 @@ function App() {
         setOrderPlaced={setOrderPlaced}
         orderTotal={orderTotal}
         setOrderTotal={setOrderTotal}
+
+        clearAll={clearAll}
       />
       {util}
       <ThankYou />
