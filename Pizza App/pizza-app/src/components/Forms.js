@@ -189,8 +189,33 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
     };
 
     const clearAll = () => {
-        window.location.reload(true);
-    }
+        // window.location.reload(true);
+        setSelectedSize("Personal");
+        setSelectedSizeCost(6);
+        setSelectedCrust("Plain Crust");
+        setSelectedCrustCost(0);
+        setSelectedSauce("Marinara Sauce");
+        setSelectedCheese("Regular");
+        setSelectedCheeseCost(0);
+        setAllMeat(allMeat.map((item) => {
+            if (item.isChecked === true){
+                return {
+                    ...item, isChecked: !item.isChecked
+                }
+            }
+            return item;
+        }));
+        setSelectedMeatCost(0);
+        setAllVeggies(allVeggies.map((item) => {
+            if (item.isChecked === true){
+                return {
+                    ...item, isChecked: !item.isChecked
+                }
+            }
+            return item;
+        }));
+        setSelectedVegCost(0);
+    };
 
     return (
         <Jumbotron

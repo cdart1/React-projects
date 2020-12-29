@@ -3,7 +3,7 @@ import { Container, Jumbotron } from "react-bootstrap";
 import './App.css';
 import PizzaForm from "./components/Forms";
 import PizzaVideo from "./components/video/pizza-video.mp4";
-import PizzaImg from "./components/img/pizza-img.jpg";
+import PizzaImg from "./components/img/Vegan-Pizza2.jpg";
 import Nav from "./components/Nav";
 import Jumbo from "./components/Jumbotron";
 import Prices from "./components/Prices";
@@ -66,8 +66,9 @@ function App() {
 const receipt = () => {
   if (orderPlaced) {
       render (
-      <Jumbotron>
-          <div className="show-order">
+      <Jumbotron className="text-center"
+        style={{ color: "#FEEFB3", paddingBottom: "10px", paddingTop: "10px", backgroundColor: "rgba(128, 53, 0, 0.781)" }}>
+          <Container>
               <h3>You Ordered:</h3>
               <p>Size: {selectedSize} (${selectedSizeCost})</p>
               <p>Crust: {selectedCrust} 
@@ -80,11 +81,11 @@ const receipt = () => {
               {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
               {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
               <p>-----------------------------------------------</p>
-          </div>
-          <div className="total-price">
+          </Container>
+          <Container className="total-price">
               <h3>Total: ${orderTotal}.00</h3>
               <p></p>
-          </div>
+          </Container>
       </Jumbotron>
         )
     }
@@ -109,7 +110,21 @@ const receipt = () => {
       }}/>
       {/* Jumbotron here */}
       <Jumbo />
-      <Prices />
+      <Prices 
+        setSelectedSize={setSelectedSize}
+        setSelectedSizeCost={setSelectedSizeCost}
+        setSelectedCrust={setSelectedCrust}
+        setSelectedCrustCost={setSelectedCrustCost}
+        setSelectedSauce={setSelectedSauce}
+        allMeat={allMeat}
+        setAllMeat={setAllMeat}
+        setSelectedMeat={setSelectedMeat}
+        setSelectedMeatCost={setSelectedMeatCost}
+        allVeggies={allVeggies}
+        setAllVeggies={setAllVeggies}
+        setSelectedVegCost={setSelectedVegCost}
+
+      />
       <PizzaForm 
         selectedSize={selectedSize}
         setSelectedSize={setSelectedSize}
