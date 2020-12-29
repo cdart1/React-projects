@@ -9,6 +9,7 @@ import Jumbo from "./components/Jumbotron";
 import Prices from "./components/Prices";
 import ThankYou from "./components/ThankYou";
 import { render } from "@testing-library/react";
+import Receipt from "./components/Receipt";
 
 function App() {
   // Size
@@ -59,37 +60,35 @@ function App() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderTotal, setOrderTotal] = useState();
 
-  useEffect(() => {
-        receipt();
-    }, [orderPlaced]);
+//   useEffect(() => {
+//         receipt();
+//     }, [orderPlaced]);
 
-const receipt = () => {
-  if (orderPlaced) {
-      render (
-      <Jumbotron className="text-center"
-        style={{ color: "#FEEFB3", paddingBottom: "10px", paddingTop: "10px", backgroundColor: "rgba(128, 53, 0, 0.781)" }}>
-          <Container>
-              <h3>You Ordered:</h3>
-              <p>Size: {selectedSize} (${selectedSizeCost})</p>
-              <p>Crust: {selectedCrust} 
-                  {selectedCrustCost !== 0 ? " (+$" + selectedCrustCost + ")": " (no additional cost)"}
-              </p>
-              <p>Sauce: {selectedSauce} (no additional cost)</p>
-              <p>Cheese: {selectedCheese}
-                  {selectedCheeseCost !== 0 ? " (+$" + selectedCheeseCost + ")": " (no additional cost)"}
-              </p>
-              {selectedMeat.length !== 0 ? <p>Meat: {meatStr}</p> : null}
-              {selectedVeggies.length !== 0 ? <p>Veggies: {vegStr}</p> : null}
-              <p>-----------------------------------------------</p>
-          </Container>
-          <Container className="total-price">
-              <h3>Total: ${orderTotal}.00</h3>
-              <p></p>
-          </Container>
-      </Jumbotron>
-        )
-    }
-};
+  
+    let util = null
+      if(orderPlaced){
+        util = <Receipt
+        selectedSize={selectedSize}
+        selectedSizeCost={selectedSizeCost}
+
+        selectedCrust={selectedCrust}
+        selectedCrustCost={selectedCrustCost}
+
+        selectedSauce={selectedSauce}
+
+        selectedCheese={selectedCheese}
+        selectedCheeseCost={selectedCheeseCost}
+
+        selectedMeat={selectedMeat}
+        meatStr={meatStr}
+
+        selectedVeggies={selectedVeggies}
+        vegStr={vegStr}
+
+        orderTotal={orderTotal}
+         />
+      }
+
 
   return (
     <Container 
@@ -167,7 +166,7 @@ const receipt = () => {
         orderTotal={orderTotal}
         setOrderTotal={setOrderTotal}
       />
-      {receipt}
+      {util}
       <ThankYou />
     </Container>
   );

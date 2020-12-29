@@ -574,7 +574,7 @@ const PizzaForm = ({ selectedSize, setSelectedSize,
                         size="lg"
                         block
                         onClick={clearAll}
-                    >Cancel</Button>
+                    >Reset</Button>
                 </Col>
             </Row>
             </Form>

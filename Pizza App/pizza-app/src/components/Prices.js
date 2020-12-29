@@ -6,7 +6,7 @@ const Prices = ({ setSelectedSize, setSelectedSizeCost,
                 setSelectedCrust, setSelectedCrustCost,
                 setSelectedSauce, setSelectedMeatCost,
                 allMeat, setAllMeat, allVeggies, 
-                setAllVeggies, setSelectedVegCost
+                setAllVeggies, setSelectedVegCost,
              }) => {
 
     const PopularPizza1 = () => {
