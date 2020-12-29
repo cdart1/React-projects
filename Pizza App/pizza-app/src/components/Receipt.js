@@ -10,6 +10,8 @@ const Receipt = ({ selectedSize, selectedSizeCost,
                     selectedVeggies, vegStr, 
                     orderTotal
                 }) => {
+
+    
     return (
         <Jumbotron className="text-center"
             style={{ color: "#FEEFB3", paddingBottom: "10px", paddingTop: "10px", backgroundColor: "rgba(128, 53, 0, 0.781)" }}>
@@ -31,7 +33,6 @@ const Receipt = ({ selectedSize, selectedSizeCost,
                     <h3>Total: ${orderTotal}.00</h3>
                     <p></p>
                 </Container>
-                <ThankYou />
             </Jumbotron>
     )
 }
