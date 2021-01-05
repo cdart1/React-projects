@@ -1,7 +1,8 @@
 
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-export default class GroceryCart extends Component {
+class GroceryCart extends Component {
     // Function that calculates total of the items in the cart.
     total() {
         // Go through each item in the cart and reduce the prices of every item to reflect a total price.
@@ -43,3 +44,25 @@ export default class GroceryCart extends Component {
         </div>
     }
 }
+
+// This function takes the state and picks off just the 'cart' and makes that avaibale in its properties.
+function mapStateToProps(state) {
+    return {
+        items: state.cart
+    }
+}
+
+// This function takes the dispatch function and creates messages which it sends to the store and reducer, 
+// which is available through the prop 'removeFromCart' function.
+function mapDispatchToProps(dispatch) {
+    return {
+        removeFromCart: (index) => {
+            dispatch({
+                type: 'REMOVE_FROM_CART',
+                index
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroceryCart)
