@@ -2,14 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import store from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import cartReducer from "./reducers/cart-reducer";
 // By adding curley braces, we are accessing the 'createStore' from redux.
 import { createStore } from "redux";
 
-const Store = createStore(cartReducer)
+const Store = createStore(
+  cartReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 
 ReactDOM.render(
   <React.StrictMode>

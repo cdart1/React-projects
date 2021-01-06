@@ -1,6 +1,7 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { removeFromCart } from "../reducers/actions";
 
 class GroceryCart extends Component {
     // Function that calculates total of the items in the cart.
@@ -26,7 +27,7 @@ class GroceryCart extends Component {
                         <th>Item Name</th>
                     </tr>
                     {this.props.items.map((item, index) => {
-                        return <tr id={index}>
+                        return <tr key={index}>
                             <td>
                                 <button onClick={() => this.props.removeFromCart(index)}>
                                     remove
@@ -39,7 +40,7 @@ class GroceryCart extends Component {
                 </tbody>
             </table>
             <div>
-                Total: ${this.total()}
+                Total: ${this.total().toFixed(2)}
             </div>
         </div>
     }
@@ -57,10 +58,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         removeFromCart: (index) => {
-            dispatch({
-                type: 'REMOVE_FROM_CART',
-                index
-            })
+            dispatch(removeFromCart(index))
         }
     }
 }

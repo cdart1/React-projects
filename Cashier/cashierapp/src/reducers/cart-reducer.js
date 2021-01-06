@@ -1,3 +1,4 @@
+import { UNDO, REDO, ADD_TO_CART, REMOVE_FROM_CART } from "./actions";
 
 const GROCERY_ITEMS = [
     {name: "Sliced bacon", price: 5.79},
@@ -31,7 +32,7 @@ const cartReducer = (state, action) => {
         }
     }
     switch (action.type) {
-        case "UNDO": {
+        case UNDO: {
             // We should go one backwards in time.
             let historyIndex = state.historyIndex - 1
             // To prevent anyone going to a negative number and trying to access a negative index of the array.
@@ -47,8 +48,8 @@ const cartReducer = (state, action) => {
                 historyIndex
             }
         }
-        case "REDO": {
-            let historyIndex = state.historyIndex - 1
+        case REDO: {
+            let historyIndex = state.historyIndex + 1
             // This makes it so the historyIndex doesn't exceed the history array.
             historyIndex = Math.min(historyIndex, state.history.length - 1)
             return {
@@ -57,18 +58,27 @@ const cartReducer = (state, action) => {
                 historyIndex
             }
         }
-        case 'ADD_TO_CART': {
+        case ADD_TO_CART: {
             // When we add something to the cart we need to return new state.
             // We use the spread operator so that the old state fills up the object and we can replace it with new state,
             // which allows us to keep the 'forSale' property.
             const cart = [...state.cart, action.item]
 
-            // We want to keep track of every time we add to the cart, so we update 'history' to be what it was before, 
-            // and add a new item which is the state of the cart presently.
-            const history = [...state.history, cart]
-            // 
-            const historyIndex = state.historyIndex + 1
+            // Copy all of the history.
+            const history = [...state.history]
 
+            // Chop off all recorded future history that happened after this point in time.
+            // Performing actions in the past destroys all of the previous future.
+            // You can't go Back to the Future.
+            history.splice(state.historyIndex + 1, state.history.length)
+
+            // Add the current cart state to the end of the history array.
+            history.push(cart)
+
+            // Mark our historyIndex as being the last thing in the array.
+            const historyIndex = history.length - 1
+
+            console.log(historyIndex, history)
             return {
                 // Return the state, and the state is basically everything that it was except overwrite the cart with the above 'cart' array.
                 ...state,
@@ -77,13 +87,16 @@ const cartReducer = (state, action) => {
                 historyIndex
             }
         }
-        case 'REMOVE_FROM_CART': {
+        case REMOVE_FROM_CART: {
             const cart = [...state.cart]
             cart.splice(action.index, 1)
 
-            const history = [...state.history, cart]
-            const historyIndex = state.historyIndex + 1
-
+            const history = [...state.history]
+            history.splice(state.historyIndex + 1, state.history.length)
+            history.push(cart)
+            const historyIndex = history.length - 1
+            
+            console.log(historyIndex, history)
             return {
                 ...state,
                 cart,
