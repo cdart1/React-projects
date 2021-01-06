@@ -1,0 +1,25 @@
+h1 {
+  text-align: center;
+}
+
+body {
+  background-color: darkgreen;
+}
+
+#app-container {
+  width: 600px;
+  background-color: white;
+  border: solid black 1px;
+  margin: auto;
+  padding: 5px;
+}
+
+#grocery-items, #grocery-cart {
+  width: 48%;
+  margin: 1%;
+}
+
+#grocery-container {
+  display: flex;
+  justify-content: center;
+}
