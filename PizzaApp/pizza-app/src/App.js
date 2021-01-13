@@ -65,9 +65,8 @@ function App() {
   const [buttonState, setButtonState] = useState(false);
 
   // Api Image
-  const [isLoaded, setIsLoaded] = useState(false);
   const [pizzaImg, setPizzaImg] = useState();
-  const [imgError, setImgError]= useState(null);
+  const [imgError, setImgError]= useState(false);
 
 //   useEffect(() => {
 //         receipt();
@@ -147,13 +146,10 @@ function App() {
         zIndex: "-1"
       }}/>
       <PizzaApiImg 
-        setIsLoaded={setIsLoaded}
         setPizzaImg={setPizzaImg}
         setImgError={setImgError}
-        isLoaded={isLoaded}
         pizzaImg={pizzaImg}
         imgError={imgError}
-
       />
       <Jumbo />
       <Prices 
