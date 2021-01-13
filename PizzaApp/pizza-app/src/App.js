@@ -10,6 +10,7 @@ import Prices from "./components/Prices";
 import ThankYou from "./components/ThankYou";
 import { render } from "@testing-library/react";
 import Receipt from "./components/Receipt";
+import PizzaApiImg from "./components/pizzaApi";
 
 function App() {
   // Size
@@ -62,6 +63,10 @@ function App() {
 
   // Button disabling
   const [buttonState, setButtonState] = useState(false);
+
+  // Api Image
+  const [pizzaImg, setPizzaImg] = useState();
+  const [imgError, setImgError]= useState(false);
 
 //   useEffect(() => {
 //         receipt();
@@ -140,7 +145,12 @@ function App() {
         transform: "translate(-50%, -50%)",
         zIndex: "-1"
       }}/>
-      {/* Jumbotron here */}
+      <PizzaApiImg 
+        setPizzaImg={setPizzaImg}
+        setImgError={setImgError}
+        pizzaImg={pizzaImg}
+        imgError={imgError}
+      />
       <Jumbo />
       <Prices 
         setSelectedSize={setSelectedSize}
